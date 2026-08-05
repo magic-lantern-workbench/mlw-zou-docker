@@ -1,0 +1,71 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: zou-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zoudb
+      POSTGRES_USER: zou
+      POSTGRES_PASSWORD: zou
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zou -d zoudb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: zou-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.8
+    container_name: zou-meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - meili_data:/meili_data
+
+  zou:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zou
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      meilisearch:
+        condition: service_started
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: zoudb
+      DB_USER: zou
+      DB_PASSWORD: zou
+
+      KV_HOST: redis
+
+      INDEXER_HOST: meilisearch
+
+      SECRET_KEY: change-me
+
+      FS_BACKEND: local
+      PREVIEW_FOLDER: /data/previews
+    ports:
+      - "5000:5000"
+    volumes:
+      - zou_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  meili_data:
+  zou_data:
