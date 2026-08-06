@@ -1,0 +1,103 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: zou-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zoudb
+      POSTGRES_USER: zou
+      POSTGRES_PASSWORD: zou
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zou -d zoudb"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: zou-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.8
+    container_name: zou-meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: changeme
+    volumes:
+      - meili_data:/meili_data
+
+  zou:
+    build:
+      context: .
+      dockerfile: Dockerfile-studio
+    container_name: zou
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      #
+      # Database
+      #
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: zoudb
+      DB_USER: zou
+      DB_USERNAME: zou
+      DB_PASSWORD: zou
+
+      #
+      # Redis
+      #
+      KV_HOST: redis
+      KV_PORT: 6379
+
+      #
+      # Search
+      #
+      INDEXER_HOST: meilisearch
+      INDEXER_PORT: 7700
+
+      #
+      # Security
+      #
+      SECRET_KEY: change-me
+
+      #
+      # Studio Defaults
+      #
+      FS_BACKEND: local
+      PREVIEW_FOLDER: /studio/previews
+      TMP_DIR: /studio/tmp
+
+      #
+      # Typical studio profile
+      #
+      STUDIO_NAME: WizzerWorks
+      STUDIO_MODE: vfx
+
+      #
+      # Optional mail settings
+      #
+      MAIL_DEFAULT_SENDER: msm@wizzerworks.com
+
+    ports:
+      - "5000:5000"
+
+    volumes:
+      - studio_data:/studio
+      - thumbnails:/studio/previews
+
+volumes:
+  postgres_data:
+  redis_data:
+  meili_data:
+  studio_data:
+  thumbnails:
