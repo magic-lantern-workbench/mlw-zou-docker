@@ -49,6 +49,7 @@ services:
       DB_PORT: 5432
       DB_DATABASE: zoudb
       DB_USER: zou
+      DB_USERNAME: zou
       DB_PASSWORD: zou
 
       KV_HOST: redis
