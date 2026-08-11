@@ -19,6 +19,17 @@ RUN git clone https://github.com/cgwire/zou.git .
 RUN pip install --upgrade pip && \
     pip install .
 
+# Default DB envs (ensure DB_USERNAME present)
+ENV DB_HOST=postgres
+ENV DB_PORT=5432
+ENV DB_DATABASE=zoudb
+ENV DB_USER=zou
+ENV DB_USERNAME=zou
+ENV DB_PASSWORD=zou
+ENV KV_HOST=redis
+ENV INDEXER_HOST=meilisearch
+ENV SECRET_KEY=change-me
+
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
