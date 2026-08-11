@@ -12,8 +12,10 @@ RUN apt-get update && \
 
 WORKDIR /app
 
+# Clone Zou
 RUN git clone https://github.com/cgwire/zou.git .
 
+# Install Zou
 RUN pip install --upgrade pip && \
     pip install .
 
@@ -23,3 +25,4 @@ RUN chmod +x /docker-entrypoint.sh
 EXPOSE 5000
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+#CMD ["gunicorn", "-b", "0.0.0.0:5000", "zou.app:app"]
