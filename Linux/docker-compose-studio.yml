@@ -73,6 +73,12 @@ services:
       #
       SECRET_KEY: change-me
 
+      # Kitsu expects the backend target to be the API root, not a URL already
+      # ending in /api. Vite rewrites /api -> / and /socket.io is also proxied
+      # to this same backend host unless a separate event service is used.
+      KITSU_API_TARGET: http://localhost:5000
+      KITSU_EVENT_TARGET: http://localhost:5000
+
       #
       # Studio Defaults
       #

@@ -30,6 +30,12 @@ ENV KV_HOST=redis
 ENV INDEXER_HOST=meilisearch
 ENV SECRET_KEY=change-me
 
+# Kitsu proxies /api and /socket.io to the backend host and strips the prefix.
+# The target must be the backend root (for example http://localhost:5000), not
+# a URL that already includes /api.
+ENV KITSU_API_TARGET=http://localhost:5000
+ENV KITSU_EVENT_TARGET=http://localhost:5000
+
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
