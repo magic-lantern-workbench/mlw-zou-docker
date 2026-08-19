@@ -27,12 +27,13 @@ do
     sleep 5
 done
 
-# Seed initial data if needed
-if zou init-data; then
-    echo "init-data succeeded"
-else
-    echo "zou init-data failed" >&2
-fi
+# Seed initial data: retry until it succeeds (ensures app doesn't start without required seed data)
+until zou init-data; do
+    echo "zou init-data failed; retrying in 5s..." >&2
+    sleep 5
+done
+
+echo "init-data succeeded"
 
 # The Kitsu frontend calls the backend through /api and /socket.io; the backend
 # itself stays on the root routes (/config, /auth, /data, etc.) and is served via
