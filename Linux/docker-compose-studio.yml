@@ -77,7 +77,7 @@ services:
       # ending in /api. Vite rewrites /api -> / and /socket.io is also proxied
       # to this same backend host unless a separate event service is used.
       KITSU_API_TARGET: http://localhost:5000
-      KITSU_EVENT_TARGET: http://localhost:5000
+      KITSU_EVENT_TARGET: http://localhost:5001
 
       #
       # Studio Defaults
@@ -99,6 +99,7 @@ services:
 
     ports:
       - "5000:5000"
+      - "5001:5001"
 
     volumes:
       - studio_data:/studio

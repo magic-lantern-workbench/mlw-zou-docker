@@ -36,8 +36,16 @@ done
 echo "init-data succeeded"
 
 # The Kitsu frontend calls the backend through /api and /socket.io; the backend
-# itself stays on the root routes (/config, /auth, /data, etc.) and is served via
-# the main Gunicorn process on :5000.
+# itself stays on the root routes (/config, /auth, /data, etc.). Run a
+# small event server for socket.io on port 5001 and expose it to the host.
+
+echo "Starting event server on 0.0.0.0:5001"
+# Run the event server in the background (gevent worker). It must be reachable
+# from the host at port 5001; docker-compose maps it to the host.
+nohup gunicorn --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker \
+    -b 0.0.0.0:5001 -w 1 zou.event_stream:app > /proc/1/fd/1 2>/proc/1/fd/2 &
+
+# Start main API server
 exec gunicorn \
     --workers 4 \
     --bind 0.0.0.0:5000 \

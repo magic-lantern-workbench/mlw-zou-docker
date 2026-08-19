@@ -34,7 +34,10 @@ ENV SECRET_KEY=change-me
 # The target must be the backend root (for example http://localhost:5000), not
 # a URL that already includes /api.
 ENV KITSU_API_TARGET=http://localhost:5000
-ENV KITSU_EVENT_TARGET=http://localhost:5000
+ENV KITSU_EVENT_TARGET=http://localhost:5001
+
+# Ensure gevent-based event server support is available
+RUN pip install gevent gevent-websocket
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
