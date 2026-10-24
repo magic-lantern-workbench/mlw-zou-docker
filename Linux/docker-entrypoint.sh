@@ -3,15 +3,15 @@ set -e
 
 echo "Waiting for database..."
 
-action_api_target="${KITSU_API_TARGET:-http://localhost:5000}"
-action_event_target="${KITSU_EVENT_TARGET:-http://localhost:5000}"
+action_api_target="${KITSU_API_TARGET:-http://localhost:5010}"
+action_event_target="${KITSU_EVENT_TARGET:-http://localhost:5001}"
 
 # Kitsu proxies /api and /socket.io to the backend root. Do not append /api to
 # the target URL here; Vite already strips the prefix during the rewrite.
-# Keeping the backend target as http://localhost:5000 preserves the expected
+# Keeping the backend target as http://localhost:5010 (host port mapped to 5000) preserves the expected
 # /config and /socket.io routes when the frontend is started with:
-#   KITSU_API_TARGET=http://localhost:5000
-#   KITSU_EVENT_TARGET=http://localhost:5000
+#   KITSU_API_TARGET=http://localhost:5010
+#   KITSU_EVENT_TARGET=http://localhost:5001
 
 echo "KITSU_API_TARGET=${action_api_target}"
 echo "KITSU_EVENT_TARGET=${action_event_target}"
