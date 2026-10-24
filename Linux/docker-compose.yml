@@ -61,7 +61,7 @@ services:
       FS_BACKEND: local
       PREVIEW_FOLDER: /data/previews
     ports:
-      - "5000:5000"
+      - "5010:5000" # Maps local port 5010 to internal container port 5000
     volumes:
       - zou_data:/data
 
