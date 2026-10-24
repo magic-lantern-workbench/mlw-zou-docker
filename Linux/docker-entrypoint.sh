@@ -16,16 +16,14 @@ action_event_target="${KITSU_EVENT_TARGET:-http://localhost:5000}"
 echo "KITSU_API_TARGET=${action_api_target}"
 echo "KITSU_EVENT_TARGET=${action_event_target}"
 
-until zou is-db-ready
+# 'zou is-db-ready' exits 0 even when the schema is missing, so always run
+# init-db (idempotent) and retry until it succeeds.
+until zou init-db
 do
-    if zou init-db; then
-        echo "init-db succeeded"
-        break
-    else
-        echo "zou init-db failed; retrying in 5s..." >&2
-    fi
+    echo "zou init-db failed; retrying in 5s..." >&2
     sleep 5
 done
+echo "init-db succeeded"
 
 # Seed initial data: retry until it succeeds (ensures app doesn't start without required seed data)
 until zou init-data; do
