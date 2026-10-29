@@ -14,6 +14,7 @@ WORKDIR /app
 
 # Clone Zou
 RUN git clone https://github.com/cgwire/zou.git .
+RUN git clone https://github.com/magic-lantern-workbench/zou.git .
 
 # Install Zou
 RUN pip install --upgrade pip && \
