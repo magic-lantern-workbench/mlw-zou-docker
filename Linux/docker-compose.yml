@@ -60,6 +60,16 @@ services:
 
       FS_BACKEND: local
       PREVIEW_FOLDER: /data/previews
+
+      # Set AUTH_STRATEGY=auth_remote_keycloak to log in against Keycloak
+      # (Kitsu's login form is unchanged). Unset, local accounts are used.
+      AUTH_STRATEGY: ${AUTH_STRATEGY:-auth_local_classic}
+      KEYCLOAK_SERVER_URL: ${KEYCLOAK_SERVER_URL:-}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-}
+      KEYCLOAK_ROLE_MAP: ${KEYCLOAK_ROLE_MAP:-admin:admin;manager:manager;supervisor:supervisor;user:user;vendor:vendor;client:client}
+      KEYCLOAK_DEFAULT_ROLE: ${KEYCLOAK_DEFAULT_ROLE:-user}
     ports:
       - "5010:5000" # Maps local port 5010 to internal container port 5000
     volumes:
