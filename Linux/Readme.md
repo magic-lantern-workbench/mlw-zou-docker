@@ -43,6 +43,9 @@ docker compose up -d
 
 `KEYCLOAK_ROLE_MAP` maps Keycloak role names to Kitsu roles as
 `keycloak-role:kitsu-role` pairs separated by semicolons; the most privileged
-match wins, and `KEYCLOAK_DEFAULT_ROLE` applies when none matches. Accounts
+match wins, and `KEYCLOAK_DEFAULT_ROLE` applies when none matches. The role
+follows Keycloak at every login (`KEYCLOAK_SYNC_ROLE=always`); set
+`first-login` to set it only when the person is created and keep later changes
+made in Kitsu. Accounts
 listed in `PROTECTED_ACCOUNTS` (e.g. the local admin) keep their local
 password. Keycloak's own two-factor prompts cannot run with the password grant.
