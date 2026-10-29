@@ -1,0 +1,13 @@
+# Joins Zou to the Docker network of the Keycloak container so that it can
+# reach it by name. Enable it with COMPOSE_FILE in a .env file next to this
+# one, see Readme.md.
+services:
+  zou:
+    networks:
+      - default
+      - keycloak
+
+networks:
+  keycloak:
+    name: ${KEYCLOAK_NETWORK:-mlw-platform_default}
+    external: true

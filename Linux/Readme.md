@@ -26,17 +26,19 @@ Zou can check users against a Keycloak server while Kitsu keeps its own login
 form. On each login Zou sends the email and password to Keycloak, creates the
 person on the first login and sets their role from their Keycloak roles.
 
-In Keycloak, create a confidential client for Zou with **Direct access grants**
-enabled, and create the roles you want to map (realm roles, or roles of that
-client). Then start the stack with:
+In Keycloak, create a client for Zou with **Direct access grants** enabled
+(Client authentication off for a public client, no secret needed), and create
+the roles you want to map (realm roles, or roles of that client).
+
+Zou runs in a container, so it must reach Keycloak by a name that works from
+inside the Docker network, not `localhost`. `docker-compose.keycloak.yml` joins
+the `zou` service to the network of the Keycloak container. Copy
+`.env.example` to `.env` (ignored by git), adjust it, then rebuild and start:
 
 `````
-AUTH_STRATEGY=auth_remote_keycloak \
-KEYCLOAK_SERVER_URL=http://keycloak:8080 \
-KEYCLOAK_REALM=mlw \
-KEYCLOAK_CLIENT_ID=zou \
-KEYCLOAK_CLIENT_SECRET=<secret> \
-docker compose up -d --build
+cp .env.example .env
+docker compose build --no-cache zou
+docker compose up -d
 `````
 
 `KEYCLOAK_ROLE_MAP` maps Keycloak role names to Kitsu roles as

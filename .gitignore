@@ -1,0 +1,2 @@
+# Local settings, may hold a Keycloak client secret
+Linux/.env
